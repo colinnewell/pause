@@ -71,6 +71,7 @@ sub refused_index_test {
     $result->package_list_ok(
       [
         { package => 'Hall::MtKing',   version => '0.01'  },
+        { package => 'Jenkins::Hack',  version => '0.11' },
         { package => 'XForm::Rollout', version => '1.00'  },
         { package => 'Y',              version => 2       },
       ],
