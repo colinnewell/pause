@@ -769,7 +769,7 @@ sub checkin_into_primeur {
       if(lc($self->{MAIN_PACKAGE}) eq lc($package)) {
           $userid = $self->{USERID} or die;
       } else {
-          my $lookup = "select userid from primeur where package = ?";
+          my $lookup = "select userid from primeur where lower(package) = lower(?)";
           my $user_ids = $dbh->selectall_arrayref($lookup, undef, $self->{MAIN_PACKAGE});
           my ($row) = pop @$user_ids;
           if($row) {
