@@ -116,7 +116,7 @@ subtest "do not index if meta has release_status <> stable" => sub {
 
   $result->email_ok(
     [
-      { subject => 'PAUSE indexer report AAARGH/Mooooooose-0.02.tar.gz' },
+      { subject => 'PAUSE indexer report MERCKX/Mooooooose-0.02.tar.gz' },
       { subject => 'PAUSE indexer report OOOPPP/Jenkins-Hack-0.12.tar.gz' },
       { subject => 'PAUSE indexer report OPRIME/XForm-Rollout-1.01.tar.gz' },
     ],
@@ -141,6 +141,7 @@ subtest "do not index if meta has release_status <> stable" => sub {
       { package => 'Jenkins::Hack',  version => '0.12'  },
       { package => 'Jenkins::Hack2', version => '0.12'  },
       { package => 'Mooooooose',     version => '0.02'  },
+      { package => 'Mooooooose::Role', version => '0.02'  },
       { package => 'XForm::Rollout', version => '1.01'  },
     ],
   );
@@ -176,6 +177,7 @@ subtest "warn when pkg and module match only case insensitively" => sub {
       { package => 'Jenkins::Hack',  version => '0.12'  },
       { package => 'Jenkins::Hack2', version => '0.12'  },
       { package => 'Mooooooose',     version => '0.02'  },
+      { package => 'Mooooooose::Role', version => '0.02'  },
       { package => 'More',           version => '0.202' },
       { package => 'XForm::Rollout', version => '1.01'  },
     ],
@@ -183,7 +185,7 @@ subtest "warn when pkg and module match only case insensitively" => sub {
 
   $result->email_ok(
     [
-      { subject => 'PAUSE indexer report AAARGH/Mooooooose-0.02.tar.gz' },
+      { subject => 'PAUSE indexer report MERCKX/Mooooooose-0.02.tar.gz' },
       { subject => 'PAUSE indexer report OOOPPP/Jenkins-Hack-0.12.tar.gz' },
       { subject => 'PAUSE indexer report OPRIME/XForm-Rollout-1.01.tar.gz' },
       { subject => 'PAUSE indexer report RJBS/fewer-0.202.tar.gz',

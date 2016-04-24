@@ -80,6 +80,8 @@ subtest "add comaintainer" => sub {
     [qw/Bug::Gold ATRION/],
     [qw/Jenkins::Hack ONE/],
     [qw/Jenkins::Hack TWO/],
+    [qw/Mooooooose MERCKX/],
+    [qw/Mooooooose BOONEN/],
   );
   for my $comaint (@comaintainers)
   {
@@ -94,7 +96,7 @@ subtest "add comaintainer" => sub {
       'Bug::Gold'       => { f => 'OPRIME', c => ['ATRION'] },
       'Hall::MtKing'    => { f => 'XYZZY' },
       'Jenkins::Hack'   => { f => 'OOOPPP', c => [qw/ONE TWO/] },
-      'Mooooooose'      => { f => 'AAARGH' },
+      'Mooooooose'      => { f => 'AAARGH', c => [qw/BOONEN MERCKX/] },
       'XForm::Rollout'  => { f => 'OPRIME' },
       'Y',              => { f => 'XYZZY' },
     }
@@ -144,6 +146,7 @@ subtest "reindexing" => sub {
       { package => 'Jenkins::Hack',  version => '0.12'  },
       { package => 'Jenkins::Hack2', version => '0.12'  },
       { package => 'Mooooooose',     version => '0.02'  },
+      { package => 'Mooooooose::Role', version => '0.02'  },
       { package => 'XForm::Rollout', version => '1.01'  },
       { package => 'Y',              version => 2       },
     ],
@@ -151,7 +154,7 @@ subtest "reindexing" => sub {
 
   $result->email_ok(
     [
-      { subject => 'PAUSE indexer report AAARGH/Mooooooose-0.02.tar.gz' },
+      { subject => 'PAUSE indexer report MERCKX/Mooooooose-0.02.tar.gz' },
       { subject => 'PAUSE indexer report OOOPPP/Jenkins-Hack-0.12.tar.gz' },
       { subject => 'PAUSE indexer report OPRIME/XForm-Rollout-1.01.tar.gz' },
     ],
@@ -176,6 +179,7 @@ subtest "distname/pkgname permission mismatch" => sub {
       { package => 'Jenkins::Hack',  version => '0.12'  },
       { package => 'Jenkins::Hack2', version => '0.12'  },
       { package => 'Mooooooose',     version => '0.02'  },
+      { package => 'Mooooooose::Role', version => '0.02'  },
       { package => 'XForm::Rollout', version => '1.01'  },
       { package => 'Y',              version => 2       },
     ],
@@ -218,6 +222,7 @@ subtest "case mismatch, authorized for original" => sub {
       { package => 'Jenkins::Hack',  version => '0.12'  },
       { package => 'Jenkins::Hack2', version => '0.12'  },
       { package => 'Mooooooose',     version => '0.02'  },
+      { package => 'Mooooooose::Role', version => '0.02'  },
       { package => 'XForm::Rollout', version => '1.01'  },
       { package => 'Y',              version => 2       },
     ],
@@ -249,6 +254,7 @@ subtest "case mismatch, authorized for original, desc. version" => sub {
       { package => 'Jenkins::Hack',  version => '0.12'  },
       { package => 'Jenkins::Hack2', version => '0.12'  },
       { package => 'Mooooooose',     version => '0.02'  },
+      { package => 'Mooooooose::Role', version => '0.02'  },
       { package => 'XForm::Rollout', version => '1.01'  },
       { package => 'Y',              version => 2       },
     ],
@@ -290,6 +296,7 @@ subtest "perl-\\d should not get indexed" => sub {
       { package => 'Jenkins::Hack',  version => '0.12'  },
       { package => 'Jenkins::Hack2', version => '0.12'  },
       { package => 'Mooooooose',     version => '0.02'  },
+      { package => 'Mooooooose::Role', version => '0.02'  },
       { package => 'XForm::Rollout', version => '1.01'  },
       { package => 'Y',              version => 2       },
     ],
@@ -316,6 +323,7 @@ subtest "don't allow upload on permissions case conflict" => sub {
       { package => 'Jenkins::Hack',  version => '0.12'  },
       { package => 'Jenkins::Hack2', version => '0.12'  },
       { package => 'Mooooooose',     version => '0.02'  },
+      { package => 'Mooooooose::Role', version => '0.02'  },
       { package => 'XForm::Rollout', version => '1.01'  },
       { package => 'Y',              version => 2       },
     ],
@@ -346,6 +354,7 @@ subtest "distname/pkgname permission check" => sub {
       { package => 'Jenkins::Hack',  version => '0.12'  },
       { package => 'Jenkins::Hack2', version => '0.12'  },
       { package => 'Mooooooose',     version => '0.02'  },
+      { package => 'Mooooooose::Role', version => '0.02'  },
       { package => 'XForm::Rollout', version => '1.01'  },
       { package => 'Y',              version => 2       },
     ],
@@ -371,6 +380,7 @@ subtest "check comaintainers" => sub {
         'Jenkins::Hack'   => { f => 'OOOPPP', c => [qw/ONE TWO/] },
         'Jenkins::Hack2'  => { f => 'OOOPPP', c => [qw/ONE TWO/] },
         'Mooooooose'      => { f => 'AAARGH' },
+        'Mooooooose::Role' => { f => 'AAARGH', c => [qw/MERCKX/] },
         'XForm::Rollout'  => { f => 'OPRIME' },
         'Y',              => { f => 'XYZZY' },
       }
@@ -378,6 +388,50 @@ subtest "check comaintainers" => sub {
   };
 };
 
+subtest "comaint upload" => sub {
+
+  $pause->import_author_root('corpus/mld/008/authors');
+  my $result = $pause->test_reindex;
+  TODO: {
+    local $TODO = "Default permissions for new modules to be implemented";
+    $result->perm_list_ok(
+      {
+        'Bug::Gold'       => { f => 'OPRIME', c => ['ATRION'] },
+        'Hall::MtKing'    => { f => 'XYZZY' },
+        'Jenkins::Hack'   => { f => 'OOOPPP', c => [qw/ONE TWO/] },
+        'Jenkins::Hack2'  => { f => 'OOOPPP', c => [qw/ONE TWO/] },
+        'Jenkins::Hack::Utils'  => { f => 'OOOPPP', c => [qw/ONE TWO/] },
+        'Mooooooose'      => { f => 'AAARGH', c => [qw/BOONEN MERCKX/] },
+        'Mooooooose::Role'      => { f => 'AAARGH', c => [qw/MERCKX/] },
+        'XForm::Rollout'  => { f => 'OPRIME' },
+        'Y',              => { f => 'XYZZY' },
+      }
+    );
+  };
+};
+
+subtest "other comaint upload" => sub {
+
+  $pause->import_author_root('corpus/mld/009/authors');
+  my $result = $pause->test_reindex;
+  TODO: {
+    local $TODO = "Default permissions for new modules to be implemented";
+    $result->perm_list_ok(
+      {
+        'Bug::Gold'       => { f => 'OPRIME', c => ['ATRION'] },
+        'Hall::MtKing'    => { f => 'XYZZY' },
+        'Jenkins::Hack'   => { f => 'OOOPPP', c => [qw/ONE TWO/] },
+        'Jenkins::Hack2'  => { f => 'OOOPPP', c => [qw/ONE TWO/] },
+        'Jenkins::Hack::Utils'  => { f => 'OOOPPP', c => [qw/ONE TWO/] },
+        'Mooooooose'      => { f => 'AAARGH', c => [qw/BOONEN MERCKX/] },
+        'Mooooooose::Role'      => { f => 'AAARGH', c => [qw/MERCKX/] },
+        'Mooooooose::Trait'      => { f => 'AAARGH', c => [qw/BOONEN/] },
+        'XForm::Rollout'  => { f => 'OPRIME' },
+        'Y',              => { f => 'XYZZY' },
+      }
+    );
+  };
+};
 done_testing;
 
 # Local Variables:
