@@ -35,7 +35,8 @@ subtest "first indexing" => sub {
     [
       { package => 'Bug::Gold',      version => '9.001' },
       { package => 'Hall::MtKing',   version => '0.01'  },
-      { package => 'Jenkins::Hack',  version => '0.11' },
+      { package => 'Jenkins::Hack',  version => '0.11'  },
+      { package => 'Mooooooose',     version => '0.01'  },
       { package => 'XForm::Rollout', version => '1.00'  },
       { package => 'Y',              version => 2       },
     ],
@@ -43,15 +44,17 @@ subtest "first indexing" => sub {
   $result->perm_list_ok(
     {
       'Bug::Gold'       => { f => 'OPRIME' },
-      'Hall::MtKing'    => { f => 'XYZZY' },
+      'Hall::MtKing'    => { f => 'XYZZY'  },
       'Jenkins::Hack'   => { f => 'OOOPPP' },
+      'Mooooooose'      => { f => 'AAARGH' },
       'XForm::Rollout'  => { f => 'OPRIME' },
-      'Y',              => { f => 'XYZZY' },
+      'Y',              => { f => 'XYZZY'  },
     }
   );
 
   $result->email_ok(
     [
+      { subject => 'PAUSE indexer report AAARGH/Mooooooose-0.01.tar.gz' },
       { subject => 'PAUSE indexer report OOOPPP/Jenkins-Hack-0.11.tar.gz' },
       { subject => 'PAUSE indexer report OPRIME/Bug-Gold-9.001.tar.gz' },
       { subject => 'PAUSE indexer report OPRIME/XForm-Rollout-1.00.tar.gz' },
@@ -91,6 +94,7 @@ subtest "add comaintainer" => sub {
       'Bug::Gold'       => { f => 'OPRIME', c => ['ATRION'] },
       'Hall::MtKing'    => { f => 'XYZZY' },
       'Jenkins::Hack'   => { f => 'OOOPPP', c => [qw/ONE TWO/] },
+      'Mooooooose'      => { f => 'AAARGH' },
       'XForm::Rollout'  => { f => 'OPRIME' },
       'Y',              => { f => 'XYZZY' },
     }
@@ -113,7 +117,8 @@ subtest "add historic content" => sub {
       { package => 'Bug::Gold',      version => '9.001' },
       { package => 'Bug::gold',      version => '0.001' },
       { package => 'Hall::MtKing',   version => '0.01'  },
-      { package => 'Jenkins::Hack',  version => '0.11' },
+      { package => 'Jenkins::Hack',  version => '0.11'  },
+      { package => 'Mooooooose',     version => '0.01'  },
       { package => 'XForm::Rollout', version => '1.00'  },
       { package => 'Y',              version => 2       },
     ]
@@ -136,7 +141,9 @@ subtest "reindexing" => sub {
       { package => 'Bug::Gold',      version => '9.001' },
       { package => 'Bug::gold',      version => '0.001' },
       { package => 'Hall::MtKing',   version => '0.01'  },
-      { package => 'Jenkins::Hack',  version => '0.11' },
+      { package => 'Jenkins::Hack',  version => '0.12'  },
+      { package => 'Jenkins::Hack2', version => '0.12'  },
+      { package => 'Mooooooose',     version => '0.02'  },
       { package => 'XForm::Rollout', version => '1.01'  },
       { package => 'Y',              version => 2       },
     ],
@@ -144,6 +151,8 @@ subtest "reindexing" => sub {
 
   $result->email_ok(
     [
+      { subject => 'PAUSE indexer report AAARGH/Mooooooose-0.02.tar.gz' },
+      { subject => 'PAUSE indexer report OOOPPP/Jenkins-Hack-0.12.tar.gz' },
       { subject => 'PAUSE indexer report OPRIME/XForm-Rollout-1.01.tar.gz' },
     ],
   );
@@ -164,7 +173,9 @@ subtest "distname/pkgname permission mismatch" => sub {
       { package => 'Bug::Gold',      version => '9.001' },
       { package => 'Bug::gold',      version => '0.001' },
       { package => 'Hall::MtKing',   version => '0.01'  },
-      { package => 'Jenkins::Hack',  version => '0.11' },
+      { package => 'Jenkins::Hack',  version => '0.12'  },
+      { package => 'Jenkins::Hack2', version => '0.12'  },
+      { package => 'Mooooooose',     version => '0.02'  },
       { package => 'XForm::Rollout', version => '1.01'  },
       { package => 'Y',              version => 2       },
     ],
@@ -204,7 +215,9 @@ subtest "case mismatch, authorized for original" => sub {
       { package => 'Bug::Gold',      version => '9.001' },
       { package => 'Bug::gold',      version => '0.001' },
       { package => 'Hall::MtKing',   version => '0.01'  },
-      { package => 'Jenkins::Hack',  version => '0.11' },
+      { package => 'Jenkins::Hack',  version => '0.12'  },
+      { package => 'Jenkins::Hack2', version => '0.12'  },
+      { package => 'Mooooooose',     version => '0.02'  },
       { package => 'XForm::Rollout', version => '1.01'  },
       { package => 'Y',              version => 2       },
     ],
@@ -233,7 +246,9 @@ subtest "case mismatch, authorized for original, desc. version" => sub {
       { package => 'Bug::Gold',      version => '9.001' },
       { package => 'Bug::gold',      version => '0.001' },
       { package => 'Hall::MtKing',   version => '0.01'  },
-      { package => 'Jenkins::Hack',  version => '0.11' },
+      { package => 'Jenkins::Hack',  version => '0.12'  },
+      { package => 'Jenkins::Hack2', version => '0.12'  },
+      { package => 'Mooooooose',     version => '0.02'  },
       { package => 'XForm::Rollout', version => '1.01'  },
       { package => 'Y',              version => 2       },
     ],
@@ -272,7 +287,9 @@ subtest "perl-\\d should not get indexed" => sub {
       { package => 'Bug::Gold',      version => '9.001' },
       { package => 'Bug::gold',      version => '0.001' },
       { package => 'Hall::MtKing',   version => '0.01'  },
-      { package => 'Jenkins::Hack',  version => '0.11' },
+      { package => 'Jenkins::Hack',  version => '0.12'  },
+      { package => 'Jenkins::Hack2', version => '0.12'  },
+      { package => 'Mooooooose',     version => '0.02'  },
       { package => 'XForm::Rollout', version => '1.01'  },
       { package => 'Y',              version => 2       },
     ],
@@ -296,7 +313,9 @@ subtest "don't allow upload on permissions case conflict" => sub {
       { package => 'Bug::Gold',      version => '9.001' },
       { package => 'Bug::gold',      version => '0.001' },
       { package => 'Hall::MtKing',   version => '0.01'  },
-      { package => 'Jenkins::Hack',  version => '0.11' },
+      { package => 'Jenkins::Hack',  version => '0.12'  },
+      { package => 'Jenkins::Hack2', version => '0.12'  },
+      { package => 'Mooooooose',     version => '0.02'  },
       { package => 'XForm::Rollout', version => '1.01'  },
       { package => 'Y',              version => 2       },
     ],
@@ -324,7 +343,9 @@ subtest "distname/pkgname permission check" => sub {
       { package => 'Bug::Gold',      version => '9.001' },
       { package => 'Bug::gold',      version => '0.001' },
       { package => 'Hall::MtKing',   version => '0.01'  },
-      { package => 'Jenkins::Hack',  version => '0.11' },
+      { package => 'Jenkins::Hack',  version => '0.12'  },
+      { package => 'Jenkins::Hack2', version => '0.12'  },
+      { package => 'Mooooooose',     version => '0.02'  },
       { package => 'XForm::Rollout', version => '1.01'  },
       { package => 'Y',              version => 2       },
     ],
