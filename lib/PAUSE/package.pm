@@ -765,7 +765,18 @@ sub checkin_into_primeur {
       # FIXME: if this ends up being blank we should probably die?
       # validate userid existing
   } else {
-      $userid = $self->{USERID} or die;
+      # look to the existing main package.
+      if(lc($self->{MAIN_PACKAGE}) eq lc($package)) {
+          $userid = $self->{USERID} or die;
+      } else {
+          my $lookup = "select userid from primeur where package = ?";
+          my $user_ids = $dbh->selectall_arrayref($lookup, undef, $self->{MAIN_PACKAGE});
+          my ($row) = pop @$user_ids;
+          if($row) {
+              $userid = pop @$row;
+          }
+          die unless $userid;
+      }
   }
   my $query = "INSERT INTO primeur (package, userid) VALUES (?,?)";
   my $ret = $dbh->do($query, {}, $package, $userid);
