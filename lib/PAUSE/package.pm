@@ -83,12 +83,27 @@ sub give_regdowner_perms {
   my $self = shift;
   my $dbh = $self->connect;
   my $package = $self->{PACKAGE};
+  my $main_package = $self->{MAIN_PACKAGE};
   local($dbh->{RaiseError}) = 0;
   # warn "Going to execute [SELECT userid FROM mods WHERE modid = '$package']";
-  my ($sth_mods) = $dbh->selectrow_hashref("SELECT userid
+  my $sql = "SELECT userid
                                 FROM   mods
-                                WHERE  modid = ?", undef, $package);
-  if ($sth_mods) { # make sure we regard the owner as the owner
+                                WHERE  modid = ?
+                                ";
+  my @args = ($package);
+  unless(lc($main_package) eq lc($package)) {
+    $sql .= q{
+    UNION
+    SELECT userid
+    FROM   perms
+    WHERE  LOWER(package) = LOWER(?)
+    };
+    push @args, $main_package;
+  }
+
+  my $uids = $dbh->selectall_arrayref($sql, {Slice=>{}}, @args);
+  for my $sth_mods (@$uids)
+  {
       my($mods_userid) = $sth_mods->{userid};
       local($dbh->{RaiseError}) = 0;
       local($dbh->{PrintError}) = 0;
@@ -121,6 +136,7 @@ sub perm_check {
   my $self = shift;
   my $dist = $self->{DIST};
   my $package = $self->{PACKAGE};
+  my $main_package = $self->{MAIN_PACKAGE};
   my $pp = $self->{PP};
   my $dbh = $self->connect;
 
@@ -130,7 +146,8 @@ sub perm_check {
   my @ins_params = ($package, $userid);
 
   # package has any authorized maintainers? --> case insensitive
-  my($auth_ids) = $dbh->selectall_arrayref(qq{
+
+  my $sql = qq{
     SELECT package, userid
     FROM   primeur
     WHERE  LOWER(package) = LOWER(?)
@@ -142,9 +159,20 @@ sub perm_check {
     SELECT modid, userid
     FROM   mods
     WHERE  LOWER(modid) = LOWER(?)
-    },
+  };
+  my @args = ($package) x 3;
+  unless(lc($main_package) eq lc($package)) {
+    $sql .= q{
+    UNION
+    SELECT ?, userid
+    FROM   perms
+    WHERE  LOWER(package) = LOWER(?)
+    };
+    push @args, $package, $main_package;
+  }
+  my($auth_ids) = $dbh->selectall_arrayref($sql,
     undef,
-    ($package) x 3,
+    @args
   );
 
   if ($self->{FIO}{DIO} && $self->{FIO}{DIO}->isa_regular_perl($dist)) {
