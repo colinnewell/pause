@@ -74,14 +74,14 @@ subtest "add comaintainer" => sub {
   my $result = $pause->test_reindex;
   my $dbh = $result->connect_mod_db;
   my @comaintainers = (
-      [qw/Bug::Gold ATRION/],
-      [qw/Jenkins::Hack ONE/],
-      [qw/Jenkins::Hack TWO/],
+    [qw/Bug::Gold ATRION/],
+    [qw/Jenkins::Hack ONE/],
+    [qw/Jenkins::Hack TWO/],
   );
   for my $comaint (@comaintainers)
   {
-      $dbh->do("INSERT INTO perms   (package, userid) VALUES (?,?)", {}, @$comaint)
-          or die "couldn't insert!";
+    $dbh->do("INSERT INTO perms   (package, userid) VALUES (?,?)", {}, @$comaint)
+        or die "couldn't insert!";
   }
 
   $result = $pause->test_reindex;
