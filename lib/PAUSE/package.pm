@@ -803,6 +803,7 @@ sub checkin_into_primeur {
           if($row) {
               $userid = pop @$row;
           }
+          $userid = $self->{USERID} unless $userid;
           die unless $userid;
       }
   }
