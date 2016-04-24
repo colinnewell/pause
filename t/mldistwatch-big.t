@@ -35,17 +35,18 @@ subtest "first indexing" => sub {
     [
       { package => 'Bug::Gold',      version => '9.001' },
       { package => 'Hall::MtKing',   version => '0.01'  },
+      { package => 'Jenkins::Hack',  version => '0.11' },
       { package => 'XForm::Rollout', version => '1.00'  },
       { package => 'Y',              version => 2       },
     ],
   );
-
   $result->perm_list_ok(
-    [ undef, undef, undef, undef ],
+    [ undef, undef, undef, undef, undef ],
   );
 
   $result->email_ok(
     [
+      { subject => 'PAUSE indexer report OOOPPP/Jenkins-Hack-0.11.tar.gz' },
       { subject => 'PAUSE indexer report OPRIME/Bug-Gold-9.001.tar.gz' },
       { subject => 'PAUSE indexer report OPRIME/XForm-Rollout-1.00.tar.gz' },
       { subject => 'PAUSE indexer report XYZZY/Hall-MtKing-0.01.tar.gz' },
@@ -78,6 +79,7 @@ subtest "add historic content" => sub {
       { package => 'Bug::Gold',      version => '9.001' },
       { package => 'Bug::gold',      version => '0.001' },
       { package => 'Hall::MtKing',   version => '0.01'  },
+      { package => 'Jenkins::Hack',  version => '0.11' },
       { package => 'XForm::Rollout', version => '1.00'  },
       { package => 'Y',              version => 2       },
     ]
@@ -100,6 +102,7 @@ subtest "reindexing" => sub {
       { package => 'Bug::Gold',      version => '9.001' },
       { package => 'Bug::gold',      version => '0.001' },
       { package => 'Hall::MtKing',   version => '0.01'  },
+      { package => 'Jenkins::Hack',  version => '0.11' },
       { package => 'XForm::Rollout', version => '1.01'  },
       { package => 'Y',              version => 2       },
     ],
@@ -127,6 +130,7 @@ subtest "distname/pkgname permission mismatch" => sub {
       { package => 'Bug::Gold',      version => '9.001' },
       { package => 'Bug::gold',      version => '0.001' },
       { package => 'Hall::MtKing',   version => '0.01'  },
+      { package => 'Jenkins::Hack',  version => '0.11' },
       { package => 'XForm::Rollout', version => '1.01'  },
       { package => 'Y',              version => 2       },
     ],
@@ -166,6 +170,7 @@ subtest "case mismatch, authorized for original" => sub {
       { package => 'Bug::Gold',      version => '9.001' },
       { package => 'Bug::gold',      version => '0.001' },
       { package => 'Hall::MtKing',   version => '0.01'  },
+      { package => 'Jenkins::Hack',  version => '0.11' },
       { package => 'XForm::Rollout', version => '1.01'  },
       { package => 'Y',              version => 2       },
     ],
@@ -194,6 +199,7 @@ subtest "case mismatch, authorized for original, desc. version" => sub {
       { package => 'Bug::Gold',      version => '9.001' },
       { package => 'Bug::gold',      version => '0.001' },
       { package => 'Hall::MtKing',   version => '0.01'  },
+      { package => 'Jenkins::Hack',  version => '0.11' },
       { package => 'XForm::Rollout', version => '1.01'  },
       { package => 'Y',              version => 2       },
     ],
@@ -232,6 +238,7 @@ subtest "perl-\\d should not get indexed" => sub {
       { package => 'Bug::Gold',      version => '9.001' },
       { package => 'Bug::gold',      version => '0.001' },
       { package => 'Hall::MtKing',   version => '0.01'  },
+      { package => 'Jenkins::Hack',  version => '0.11' },
       { package => 'XForm::Rollout', version => '1.01'  },
       { package => 'Y',              version => 2       },
     ],
@@ -255,6 +262,7 @@ subtest "don't allow upload on permissions case conflict" => sub {
       { package => 'Bug::Gold',      version => '9.001' },
       { package => 'Bug::gold',      version => '0.001' },
       { package => 'Hall::MtKing',   version => '0.01'  },
+      { package => 'Jenkins::Hack',  version => '0.11' },
       { package => 'XForm::Rollout', version => '1.01'  },
       { package => 'Y',              version => 2       },
     ],
@@ -282,6 +290,7 @@ subtest "distname/pkgname permission check" => sub {
       { package => 'Bug::Gold',      version => '9.001' },
       { package => 'Bug::gold',      version => '0.001' },
       { package => 'Hall::MtKing',   version => '0.01'  },
+      { package => 'Jenkins::Hack',  version => '0.11' },
       { package => 'XForm::Rollout', version => '1.01'  },
       { package => 'Y',              version => 2       },
     ],
