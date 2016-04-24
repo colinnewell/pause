@@ -41,7 +41,13 @@ subtest "first indexing" => sub {
     ],
   );
   $result->perm_list_ok(
-    [ undef, undef, undef, undef, undef ],
+    {
+      'Bug::Gold'       => { f => 'OPRIME' },
+      'Hall::MtKing'    => { f => 'XYZZY' },
+      'Jenkins::Hack'   => { f => 'OOOPPP' },
+      'XForm::Rollout'  => { f => 'OPRIME' },
+      'Y',              => { f => 'XYZZY' },
+    }
   );
 
   $result->email_ok(
@@ -61,6 +67,34 @@ subtest "first indexing" => sub {
     );
   };
 
+};
+
+subtest "add comaintainer" => sub {
+
+  my $result = $pause->test_reindex;
+  my $dbh = $result->connect_mod_db;
+  my @comaintainers = (
+      [qw/Bug::Gold ATRION/],
+      [qw/Jenkins::Hack ONE/],
+      [qw/Jenkins::Hack TWO/],
+  );
+  for my $comaint (@comaintainers)
+  {
+      $dbh->do("INSERT INTO perms   (package, userid) VALUES (?,?)", {}, @$comaint)
+          or die "couldn't insert!";
+  }
+
+  $result = $pause->test_reindex;
+
+  $result->perm_list_ok(
+    {
+      'Bug::Gold'       => { f => 'OPRIME', c => ['ATRION'] },
+      'Hall::MtKing'    => { f => 'XYZZY' },
+      'Jenkins::Hack'   => { f => 'OOOPPP', c => [qw/ONE TWO/] },
+      'XForm::Rollout'  => { f => 'OPRIME' },
+      'Y',              => { f => 'XYZZY' },
+    }
+  );
 };
 
 subtest "add historic content" => sub {
